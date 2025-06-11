@@ -7,7 +7,7 @@ class Server < Sinatra::Base
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   )
   get "/add" do
-    redis.increment("key")
+    redis.inc("key")
   end
   get '/read' do
     redis.get("key")
