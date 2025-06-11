@@ -19,4 +19,5 @@ class Server < Sinatra::Base
 <Response>
     <Message>Votre vote pour les incroyables parents de Sainte Marie a été pris en compte! Merci et bonne soirée</Message>
 </Response>'
+  end
 end
