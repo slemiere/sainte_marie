@@ -7,11 +7,11 @@ class Server < Sinatra::Base
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   )
   get "/results" do
-    results = {}
+    results = ""
     ["Babies Dancing", "Artis Dances", "La Carioca", "Le Télékinésien", "La Chanson du Croissant", "Les Barbarèsques", "Les bras de Béyoncé", "Eli Kakou", "Les fairy star"].each_with_index do |talent, index|
-      results[talent] = redis.get("count:#{index + 1}").to_i
+      results << "<h1>Nombre de votes pour #{talent} : #{redis.get("count:#{index + 1}").to_i}</h1>\n"
     end
-    return results.to_json
+    return results
   end
 
   post '/message' do
