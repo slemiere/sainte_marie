@@ -9,7 +9,7 @@ class Server < Sinatra::Base
   get "/results" do
     results = {}
     ["Babies Dancing", "Artis Dances", "La Carioca", "Le Télékinésien", "La Chanson du Croissant", "Les Barbarèsques", "Les bras de Béyoncé", "Eli Kakou", "Les fairy star"].each_with_index do |talent, index|
-      results[talent] = redis.get("count:#{index}").to_i
+      results[talent] = redis.get("count:#{index + 1}").to_i
     end
     return results.to_json
   end
