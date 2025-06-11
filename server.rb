@@ -18,7 +18,7 @@ class Server < Sinatra::Base
       end
       results << "<h1>#{talent} : #{nb_votes}</h1>\n"
     end
-    results << "<h1>Le winner pour le moment est #{winner} avec #{max} votes</h1>\n"
+    results << "<h1>Le winner - pour le moment - est : #{winner} avec #{max} votes</h1>\n"
     return results
   end
 
