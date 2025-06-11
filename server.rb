@@ -6,16 +6,50 @@ class Server < Sinatra::Base
     url: ENV['REDIS_URL'] || 'redis://localhost:6379',
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   )
-  get "/add" do
-    redis.incr("key")
-    return "OK"
-  end
-  get '/read' do
-    redis.get("key")
+  get "/results" do
+    results = {}
+    (1..9).each do |i|
+      results[i] = redis.get("count:#{i}").to_i
+    end
+    return results.to_json
   end
 
   post '/message' do
-    puts "Received params: #{params.inspect}"
+    from = params['From']
+    vote = params['Body'].strip.to_i.to_s
+    # vote incorrect
+    if vote < 1 || vote > 9
+      return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<Response>
+    <Message>Votre vote est inccorect, merci d'envoyer uniquement le nombre.</Message>
+</Response>"
+    end
+    previous_vote = redis.get("voters:#{from}")
+    # nouveau vote
+    if previous_vote.nil?
+      redis.set("voters:#{from}", vote)
+      redis.incr("count:#{vote}")
+      return '<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Message>Votre vote pour les incroyables parents de Sainte Marie a été pris en compte! Merci et bonne soirée</Message>
+</Response>'
+    end
+    # déja voté ?
+    if previous_vote == vote
+      return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<Response>
+    <Message>Votre vote est déjà pris en compte.</Message>
+</Response>" 
+    end
+    if previous_vote != vote
+      redis.decr("count:#{previous_vote}")
+      redis.incr("count:#{vote}")
+      redis.set("voters:#{from}", vote)
+      return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<Response>
+    <Message>Votre vote à été mise à jours.</Message>
+</Response>" 
+    end
     return '<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Message>Votre vote pour les incroyables parents de Sainte Marie a été pris en compte! Merci et bonne soirée</Message>
