@@ -15,6 +15,7 @@ class Server < Sinatra::Base
   end
 
   post '/message' do
+    puts "Received params: #{params.inspect}"
     return '<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Message>Votre vote pour les incroyables parents de Sainte Marie a été pris en compte! Merci et bonne soirée</Message>
