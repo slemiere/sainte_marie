@@ -1,10 +1,12 @@
 require 'sinatra/base'
+require 'redis'
 
 class Server < Sinatra::Base
-  get "/" do
-    "hello world"
+  redis = Redis.new(url: ENV['REDIS_URL'] || 'redis://localhost:6379'})
+  get "/add" do
+    redis.increment("key")
   end
-  get '/frank-says' do
-    'Put this in your pipe & smoke it!'
+  get '/read' do
+    redis.get("key")
   end
 end
