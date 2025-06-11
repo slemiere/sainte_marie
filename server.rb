@@ -8,8 +8,8 @@ class Server < Sinatra::Base
   )
   get "/results" do
     results = {}
-    (1..9).each do |i|
-      results[i] = redis.get("count:#{i}").to_i
+    ["Babies Dancing", "Artis Dances", "La Carioca", "Le Télékinésien", "La Chanson du Croissant", "Les Barbarèsques", "Les bras de Béyoncé", "Eli Kakou", "Les fairy star"].each_with_index do |talent, index|
+      results[talent] = redis.get("count:#{index}").to_i
     end
     return results.to_json
   end
@@ -21,7 +21,7 @@ class Server < Sinatra::Base
     if vote < 1 || vote > 9
       return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Response>
-    <Message>Votre vote est inccorect, merci d'envoyer uniquement le nombre.</Message>
+    <Message>Votre vote est inccorect, merci d'envoyer uniquement le nombre associé à votre talent préféré</Message>
 </Response>"
     end
     previous_vote = redis.get("voters:#{from}")
@@ -31,14 +31,14 @@ class Server < Sinatra::Base
       redis.incr("count:#{vote}")
       return '<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Message>Votre vote pour les incroyables parents de Sainte Marie a été pris en compte! Merci et bonne soirée</Message>
+    <Message>Votre vote pour Les Incroyables Parents de Sainte Marie a été pris en compte! Merci et bonne soirée</Message>
 </Response>'
     end
     # déja voté ?
     if previous_vote == vote.to_s
       return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Response>
-    <Message>Votre vote est déjà pris en compte.</Message>
+    <Message>Votre vote est déjà pris en compte</Message>
 </Response>" 
     end
     if previous_vote != vote.to_s
@@ -47,7 +47,7 @@ class Server < Sinatra::Base
       redis.set("voters:#{from}", vote.to_s)
       return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Response>
-    <Message>Votre vote à été mis à jour.</Message>
+    <Message>Bien reçu, votre vote à été mis à jour !</Message>
 </Response>" 
     end
     return '<?xml version="1.0" encoding="UTF-8"?>
