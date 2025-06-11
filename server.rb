@@ -47,7 +47,7 @@ class Server < Sinatra::Base
       redis.set("voters:#{from}", vote.to_s)
       return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Response>
-    <Message>Votre vote à été mise à jours.</Message>
+    <Message>Votre vote à été mis à jour.</Message>
 </Response>" 
     end
     return '<?xml version="1.0" encoding="UTF-8"?>
