@@ -8,6 +8,7 @@ class Server < Sinatra::Base
   )
   get "/add" do
     redis.incr("key")
+    return "OK"
   end
   get '/read' do
     redis.get("key")
