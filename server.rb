@@ -10,7 +10,7 @@ class Server < Sinatra::Base
     results = ""
     max = 0
     winner = ""
-    ["Babies Dancing", "Artis Dances", "La Carioca", "Le Télékinésien", "La Chanson du Croissant", "Les Barbarèsques", "Les bras de Béyoncé", "Eli Kakou", "Les fairy star"].each_with_index do |talent, index|
+    ["Babies Dancing", "Artis Danse", "La Carioca", "Le Télékinésien", "La Chanson du Croissant", "Les Barbarèsques", "Les bras de Béyoncé", "Eli Kakou", "Les fairy star"].each_with_index do |talent, index|
       nb_votes = redis.get("count:#{index + 1}").to_i
       if nb_votes > max
         max = nb_votes
