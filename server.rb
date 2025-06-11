@@ -8,9 +8,17 @@ class Server < Sinatra::Base
   )
   get "/results" do
     results = ""
+    max = 0
+    winner = ""
     ["Babies Dancing", "Artis Dances", "La Carioca", "Le Télékinésien", "La Chanson du Croissant", "Les Barbarèsques", "Les bras de Béyoncé", "Eli Kakou", "Les fairy star"].each_with_index do |talent, index|
-      results << "<h1>Nombre de votes pour #{talent} : #{redis.get("count:#{index + 1}").to_i}</h1>\n"
+      nb_votes = redis.get("count:#{index + 1}").to_i
+      if nb_votes > max
+        max = nb_votes
+        winner = talent
+      end
+      results << "<h1>#{talent} : #{nb_votes}</h1>\n"
     end
+    results << "<h1>Le winner pour le moment est #{winner} avec #{nb_votes} votes</h1>\n"
     return results
   end
 
